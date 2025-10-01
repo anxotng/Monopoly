@@ -106,7 +106,42 @@ public class Tablero {
 
     //Método para insertar las casillas del lado norte.
     private void insertarLadoNorte() { // Precio solares grupo rojo y amarillo. Rojo -> 2200000 12 y 13, 2400000 14. Amarillo -> 2600000 15 y 16, 2800000 17
+        ArrayList<Casilla> ladoNorte = new ArrayList<>();
+        this.posiciones.add(ladoNorte);
+
+        // Creamos las casillas del lado norte:
+        Casilla parking = new Casilla("Parking", "Especial", 21, 0, banca);
+        ladoNorte.add(parking);
+
+        Casilla solar12 = new Casilla("Solar12", "Solar", 22, 2200000, banca);
+        ladoNorte.add(solar12);
         
+        Casilla suerte = new Casilla("Suerte", "Suerte", 23, banca);
+        ladoNorte.add(suerte);
+
+        Casilla solar13 = new Casilla("Solar13", "Solar", 24, 220000, banca);
+        ladoNorte.add(solar13);
+
+        Casilla solar14 = new Casilla("Solar14", "Solar", 25, 2400000, banca);
+        ladoNorte.add(solar14);
+
+        Casilla trans3 = new Casilla("Trans3", "Transporte", 26, 500000, banca);
+        ladoNorte.add(trans1);
+
+        Casilla solar15 = new Casilla("Solar15", "Solar", 27, 2600000, banca);
+        ladoNorte.add(solar15);
+
+        Casilla solar16 = new Casilla("Solar16", "Solar", 28, 2600000, banca);
+        ladoNorte.add(solar16);
+
+        Casilla serv2 = new Casilla("Serv2", "servicio", 29, 500000, banca);
+        ladoNorte.add(serv2);
+
+        Casilla solar17 = new Casilla("Solar17", "Solar", 30, 2800000, banca);
+        ladoNorte.add(solar17);
+
+        Casilla ir_carcel = new Casilla("IrCarcel", "Especial", 21, 0, banca);
+        ladoNorte.add(ir_carcel);
     }
     
 
@@ -130,3 +165,4 @@ public class Tablero {
     public Casilla encontrar_casilla(String nombre){
     }
 }
+
