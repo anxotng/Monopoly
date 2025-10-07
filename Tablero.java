@@ -75,31 +75,31 @@ public class Tablero {
         this.posiciones.add(ladoOeste);
         
         //Creamos las casillas del lado Oeste:
-        Casilla Solar6 = new Casilla("Solar6", "Solar", 12, 1400000, banca);
+        Casilla solar6 = new Casilla("Solar6", "Solar", 12, 1400000, banca);
         ladoOeste.add(Solar6);
 
-        Casilla Serv1 = new Casilla("Serv1", "Servicio", 13, 500000, banca);
+        Casilla serv1 = new Casilla("Serv1", "Servicio", 13, 500000, banca);
         ladoOeste.add(Serv1);
 
-        Casilla Solar7 = new Casilla("Solar7", "Solar", 14, 1400000, banca);
+        Casilla solar7 = new Casilla("Solar7", "Solar", 14, 1400000, banca);
         ladoOeste.add(Solar7);
 
-        Casilla Solar8 = new Casilla("Solar8", "Solar", 15, 1600000, banca);
+        Casilla solar8 = new Casilla("Solar8", "Solar", 15, 1600000, banca);
         ladoOeste.add(Solar8);
 
-        Casilla Trans2 = new Casilla("Trans2", "Transporte", 16, 500000, banca);
+        Casilla trans2 = new Casilla("Trans2", "Transporte", 16, 500000, banca);
         ladoOeste.add(Trans2);
 
-        Casilla Solar9 = new Casilla("Solar9", "Solar", 17, 1800000, banca);
+        Casilla solar9 = new Casilla("Solar9", "Solar", 17, 1800000, banca);
         ladoOeste.add(Solar9);
 
-        Casilla Caja = new Casilla("Caja", "Caja de comunidad", 18);
+        Casilla caja = new Casilla("Caja", "Caja de comunidad", 18, banca);
         ladoOeste.add(Caja);
 
-        Casilla Solar10 = new Casilla("Solar10", "Solar", 19, 1800000, banca);
+        Casilla solar10 = new Casilla("Solar10", "Solar", 19, 1800000, banca);
         ladoOeste.add(Solar10);
 
-        Casilla Solar11 = new Casilla("Solar11", "Solar", 20, 2200000, banca);
+        Casilla solar11 = new Casilla("Solar11", "Solar", 20, 2200000, banca);
         ladoOeste.add(Solar11);
     }
     
@@ -140,7 +140,7 @@ public class Tablero {
         Casilla solar17 = new Casilla("Solar17", "Solar", 30, 2800000, banca);
         ladoNorte.add(solar17);
 
-        Casilla ir_carcel = new Casilla("IrCarcel", "Especial", 21, 0, banca);
+        Casilla ir_carcel = new Casilla("IrCarcel", "Especial", 31, 0, banca);
         ladoNorte.add(ir_carcel);
     }
     
@@ -150,10 +150,34 @@ public class Tablero {
         ArrayList<Casilla> ladoEste = new ArrayList<>();
         this.posiciones.add(ladoEste);
 
+        //Creamos las casillas del lado este
         Casilla solar18 = new Casilla("Solar18", "Solar", 32, 3000000, banca);
         ladoEste.add(solar18);
 
-        Casilla 
+        Castilla solar19 = new Casilla("Solar19", "Solar", 33, 3000000, banca);
+        ladoEste.add(solar19);
+
+        Casilla caja = new Casilla("Caja", "Caja de comunidad", 34, banca);
+        ladoEste.add(caja);
+
+        Casilla solar20 = new Casilla("Solar20", "Solar", 35, 3200000, banca);
+        ladoEste.add(solar20);
+
+        Casilla trans4 = new Casilla("Trans4", "Transporte", 36, banca);
+        ladoEste.add(trans4);
+        
+        Casilla suerte = new Casilla("Suerte", "Suerte", 37, banca);
+        ladoEste.add(suerte);
+
+        Casilla solar21 = new Casilla("Solar21", "Solar", 38, 3500000, banca);
+        ladoEste.add(solar21);
+
+        Casilla imp2 = new Casilla("Imp2", 39, banca);
+        ladoEste.add(imp2);
+
+        Casilla solar22 = new Casilla("Solar22", "Solar", 40, 4000000, banca);
+        ladoEste.add(solar22);
+        
     }
 
     //Para imprimir el tablero, modificamos el método toString().
@@ -165,4 +189,5 @@ public class Tablero {
     public Casilla encontrar_casilla(String nombre){
     }
 }
+
 
