@@ -4,8 +4,8 @@ package monopoly;
 public class Valor {
     //Se incluyen una serie de constantes útiles para no repetir valores.
     public static final float FORTUNA_BANCA = 500000; // Cantidad que tiene inicialmente la Banca
-    public static final float FORTUNA_INICIAL = 9543076.28f; // Cantidad que recibe cada jugador al comenzar la partida
-    public static final float SUMA_VUELTA = 1301328.584f; // Cantidad que recibe un jugador al pasar pos la Salida
+    public static final float FORTUNA_INICIAL = 15000000; // Cantidad que recibe cada jugador al comenzar la partida
+    public static final float SUMA_VUELTA = 2000000; // Cantidad que recibe un jugador al pasar pos la Salida
     
     //Colores del texto:
     public static final String RESET = "\u001B[0m";
@@ -17,5 +17,22 @@ public class Valor {
     public static final String PURPLE = "\u001B[35m";
     public static final String CYAN = "\u001B[36m";
     public static final String WHITE = "\u001B[37m";
+    public static final String PINK = "\u001B[35m"; // rosa
+
+
+    public static String getColor(String colorGrupo){
+        return switch(colorGrupo.toLowerCase()){
+            case "negro" -> BLACK;
+            case "rojo" -> RED;
+            case "verde" -> GREEN;
+            case "amarillo" -> YELLOW;
+            case "azul" -> BLUE;
+            case "morado" -> PURPLE;
+            case "cyan" -> CYAN;
+            case "blanco" -> WHITE;
+            case "rosa" -> PINK;
+            default -> RESET;
+        };
+    }
 
 }
