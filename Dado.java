@@ -6,7 +6,7 @@ public class Dado {
     private int valor;
 
     //Metodo para simular lanzamiento de un dado: devolverá un valor aleatorio entre 1 y 6.
-    public int hacerTirada() {
-    }
+    /*public int hacerTirada() {
+    }*/
 
 }
