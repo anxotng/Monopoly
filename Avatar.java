@@ -3,12 +3,13 @@ package partida;
 import monopoly.*;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 
 public class Avatar {
 
     //Atributos
-    private String id; //Identificador: una letra generada aleatoriamente.
+    private char id; //Identificador: una letra generada aleatoriamente.
     private String tipo; //Sombrero, Esfinge, Pelota, Coche
     private Jugador jugador; //Un jugador al que pertenece ese avatar.
     private Casilla lugar; //Los avatares se sitúan en casillas del tablero.
@@ -27,6 +28,11 @@ public class Avatar {
         this.lugar = lugar;
         this.generarId(avCreados); //Llamamos al método que genera un ID para el avatar.
     }
+    //Getters y Setters:
+    public char getId() {
+        return id;
+    }
+
 
     //A continuación, tenemos otros métodos útiles para el desarrollo del juego.
     /*Método que permite mover a un avatar a una casilla concreta. Parámetros:
@@ -44,7 +50,25 @@ public class Avatar {
     Cada jugador tendrá asignado un avatar y cada avatar estará identificado por uno de los 256 caracteres ASCII
     y su identificador se decide automáticamente de forma aleatoria.*/
     private void generarId(ArrayList<Avatar> avCreados) {
-        
-        
+        boolean idRepetido;
+        char idPosible;
+        Random random = new Random();
+        do {
+            idRepetido = false; // de momento no ha sido repetido
+            idPosible = (char) ('A' + random.nextInt(26)); // genera letra mayúscula aleatoria
+            for (Avatar a : avCreados) { //Comprobamos que no se haya generado ya ese ID.
+                if (a.getId() == idPosible) {
+                    idRepetido = true;
+                    break;
+                }
+            }
+        } while (idRepetido); //Si se ha repetido, volvemos a generar otro ID. 
+        id = idPosible;
+    }
+
+    @Override
+    public String toString(){
+        return "&" + id;
     }
 }
+
