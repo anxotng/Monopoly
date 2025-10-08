@@ -34,7 +34,7 @@ public class Tablero {
         this.posiciones.add(ladoSur);
 
         // Creamos las casillas del lado sur:
-        Casilla salida = new Casilla("Salida", "Especial", 1, 0, banca);
+        Casilla salida = new Casilla("Salida", "Especial", 1, banca);
         ladoSur.add(salida);
 
         Casilla solar1 = new Casilla("Solar1", "Solar", 2, 600000, banca);
@@ -46,7 +46,7 @@ public class Tablero {
         Casilla solar2 = new Casilla("Solar2", "Solar", 4, 600000, banca);
         ladoSur.add(solar2);
 
-        Casilla imp1 = new Casilla("Imp1", 5, 0, banca);
+        Casilla imp1 = new Casilla("Imp1", 5, 2000000, banca);
         ladoSur.add(imp1);
 
         Casilla trans1 = new Casilla("Trans1", "Transporte", 6, 500000, banca);
@@ -64,8 +64,22 @@ public class Tablero {
         Casilla solar5 = new Casilla("Solar5", "Solar", 10, 1200000, banca);
         ladoSur.add(solar5);
 
-        Casilla carcel = new Casilla("Carcel", "Especial", 11, 0, banca);
+        Casilla carcel = new Casilla("Carcel", "Especial", 11, banca);
         ladoSur.add(carcel);
+
+        grupos.put("negro", new Grupo(solar1, solar2, "Negro")); // creamos un nuevo grupo en el que añ
+        solar1.setGrupo(grupos.get("negro")); // Solar 1
+        solar2.setGrupo(grupos.get("negro")); // Solar 2
+
+
+        grupos.put("azul", new Grupo(solar3, solar4, solar5, "Azul")); // creamos un nuevo grupo en el que añadimos las casillas
+        solar3.setGrupo(grupos.get("azul")); // Solar 3
+        solar4.setGrupo(grupos.get("azul")); // Solar 4
+        solar5.setGrupo(grupos.get("azul")); // Solar 5
+
+        
+
+
 
     }
 
@@ -76,31 +90,41 @@ public class Tablero {
         
         //Creamos las casillas del lado Oeste:
         Casilla solar6 = new Casilla("Solar6", "Solar", 12, 1400000, banca);
-        ladoOeste.add(Solar6);
+        ladoOeste.add(solar6);
 
         Casilla serv1 = new Casilla("Serv1", "Servicio", 13, 500000, banca);
-        ladoOeste.add(Serv1);
+        ladoOeste.add(serv1);
 
         Casilla solar7 = new Casilla("Solar7", "Solar", 14, 1400000, banca);
-        ladoOeste.add(Solar7);
+        ladoOeste.add(solar7);
 
         Casilla solar8 = new Casilla("Solar8", "Solar", 15, 1600000, banca);
-        ladoOeste.add(Solar8);
+        ladoOeste.add(solar8);
 
         Casilla trans2 = new Casilla("Trans2", "Transporte", 16, 500000, banca);
-        ladoOeste.add(Trans2);
+        ladoOeste.add(trans2);
 
         Casilla solar9 = new Casilla("Solar9", "Solar", 17, 1800000, banca);
-        ladoOeste.add(Solar9);
+        ladoOeste.add(solar9);
 
         Casilla caja = new Casilla("Caja", "Caja de comunidad", 18, banca);
-        ladoOeste.add(Caja);
+        ladoOeste.add(caja);
 
         Casilla solar10 = new Casilla("Solar10", "Solar", 19, 1800000, banca);
-        ladoOeste.add(Solar10);
+        ladoOeste.add(solar10);
 
         Casilla solar11 = new Casilla("Solar11", "Solar", 20, 2200000, banca);
-        ladoOeste.add(Solar11);
+        ladoOeste.add(solar11);
+
+        grupos.put("rosa", new Grupo(solar6, solar7, solar8, "Rosa")); // creamos un nuevo grupo en el que añadimos las casillas
+        solar6.setGrupo(grupos.get("rosa")); // Solar 6
+        solar7.setGrupo(grupos.get("rosa")); // Solar 7
+        solar8.setGrupo(grupos.get("rosa")); // Solar 8
+
+        grupos.put("salmon", new Grupo(solar9, solar10, solar11, "Salmon")); // creamos un nuevo grupo en el que añadimos las casillas
+        solar9.setGrupo(grupos.get("salmon")); // Solar 9
+        solar10.setGrupo(grupos.get("salmon")); // Solar 10
+        solar11.setGrupo(grupos.get("salmon")); // Solar 11
     }
     
 
@@ -126,7 +150,7 @@ public class Tablero {
         ladoNorte.add(solar14);
 
         Casilla trans3 = new Casilla("Trans3", "Transporte", 26, 500000, banca);
-        ladoNorte.add(trans1);
+        ladoNorte.add(trans3);
 
         Casilla solar15 = new Casilla("Solar15", "Solar", 27, 2600000, banca);
         ladoNorte.add(solar15);
@@ -140,8 +164,8 @@ public class Tablero {
         Casilla solar17 = new Casilla("Solar17", "Solar", 30, 2800000, banca);
         ladoNorte.add(solar17);
 
-        Casilla ir_carcel = new Casilla("IrCarcel", "Especial", 31, 0, banca);
-        ladoNorte.add(ir_carcel);
+        Casilla carcel = new Casilla("Carcel", "Especial", 31, banca);
+        ladoNorte.add(carcel);
     }
     
 
@@ -154,7 +178,7 @@ public class Tablero {
         Casilla solar18 = new Casilla("Solar18", "Solar", 32, 3000000, banca);
         ladoEste.add(solar18);
 
-        Castilla solar19 = new Casilla("Solar19", "Solar", 33, 3000000, banca);
+        Casilla solar19 = new Casilla("Solar19", "Solar", 33, 3000000, banca);
         ladoEste.add(solar19);
 
         Casilla caja = new Casilla("Caja", "Caja de comunidad", 34, banca);
@@ -163,7 +187,7 @@ public class Tablero {
         Casilla solar20 = new Casilla("Solar20", "Solar", 35, 3200000, banca);
         ladoEste.add(solar20);
 
-        Casilla trans4 = new Casilla("Trans4", "Transporte", 36, banca);
+        Casilla trans4 = new Casilla("Trans4", "Transporte", 36, 500000, banca);
         ladoEste.add(trans4);
         
         Casilla suerte = new Casilla("Suerte", "Suerte", 37, banca);
@@ -172,7 +196,7 @@ public class Tablero {
         Casilla solar21 = new Casilla("Solar21", "Solar", 38, 3500000, banca);
         ladoEste.add(solar21);
 
-        Casilla imp2 = new Casilla("Imp2", 39, banca);
+        Casilla imp2 = new Casilla("Imp2", 39, 2000000, banca);
         ladoEste.add(imp2);
 
         Casilla solar22 = new Casilla("Solar22", "Solar", 40, 4000000, banca);
@@ -183,11 +207,58 @@ public class Tablero {
     //Para imprimir el tablero, modificamos el método toString().
     @Override
     public String toString() {
+        StringBuilder sb =  new StringBuilder();
+      
+        // Lado Norte
+        sb.append("\n-----------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+        
+        sb.append("| ");
+        for (int i = 0; i <= 10; i++) {
+            sb.append(String.format("%-12s", colorearCasilla(posiciones.get(2).get(i)))).append("| ");        
+        }
+
+        sb.append("\n-----------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+    
+        // Lado Oeste y Este
+        for (int i = 0; i <= 8; i++) {
+
+            sb.append("| ").append(String.format("%-12s", colorearCasilla(posiciones.get(1).get(8 - i)))).append("|");
+
+            sb.append("                                                                                                                             ");
+
+            sb.append("| ").append(String.format("%-12s", colorearCasilla(posiciones.get(3).get(i)))).append("|\n");
+
+            if (i != 8) {
+                sb.append("---------------                                                                                                                             ---------------\n");
+            }
+        }
+
+        
+        // Lado Sur: igual que Norte pero recorriendo posiciones[0] en orden inverso
+        sb.append("-----------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+        
+        sb.append("| ");
+        for (int i = 0; i <= 10; i++) {
+            sb.append(String.format("%-12s", colorearCasilla(posiciones.get(0).get(10 - i)))).append("| ");
+        }
+
+        sb.append("\n-----------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+
+        return sb.toString();
+    }
+
+    //Método para colorear los solares
+    public String colorearCasilla(Casilla casilla){
+        String color = Valor.getColor(casilla.getGrupo().getColorGrupo());
+        return color + casilla.getNombre(); // Queremos que el color solo afecte al nombre de la casilla, y no al texto entero.
     }
     
     //Método usado para buscar la casilla con el nombre pasado como argumento:
-    public Casilla encontrar_casilla(String nombre){
-    }
+    /*public Casilla encontrar_casilla(String nombre){
+    }*/
 }
+
+
+
 
 
