@@ -38,6 +38,11 @@ class Grupo {
         this.numCasillas = 3;
     }
 
+    //Getters y Setters:
+    public String getColorGrupo() {
+        return colorGrupo;
+    }
+
     /* Método que añade una casilla al array de casillas miembro de un grupo.
     * Parámetro: casilla que se quiere añadir.
      */
@@ -48,7 +53,7 @@ class Grupo {
     * Parámetro: jugador que se quiere evaluar.
     * Valor devuelto: true si es dueño de todas las casillas del grupo, false en otro caso.
      */
-    public boolean esDuenhoGrupo(Jugador jugador) {
-    }
+    /*public boolean esDuenhoGrupo(Jugador jugador) {
+    }*/
 
 }
