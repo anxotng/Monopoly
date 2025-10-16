@@ -84,3 +84,19 @@ Comprueba:
 Errores de compilación por rutas:
 
 Asegúrate de estar en la carpeta raíz del proyecto (Monopoly) antes de compilar.
+
+# Versión de Java utilizada
+
+El proyecto fue desarrollado y probado utilizando Java 17 (OpenJDK 17.0.16 LTS) de Microsoft.
+Tanto el entorno de ejecución como el compilador corresponden a esta versión:
+
+    java -version
+    openjdk version "17.0.16" 2025-07-15 LTS
+    OpenJDK Runtime Environment Microsoft-11926163 (build 17.0.16+8-LTS)
+    OpenJDK 64-Bit Server VM Microsoft-11926163 (build 17.0.16+8-LTS, mixed mode, sharing)
+
+    javac -version
+    javac 17.0.16
+
+
+⚙️ Si utilizas una versión diferente de Java, es recomendable actualizar a JDK 17 para evitar posibles incompatibilidades al compilar o ejecutar el proyecto.
