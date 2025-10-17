@@ -3,7 +3,11 @@ package monopoly;
 public class MonopolyETSE {
 
     public static void main(String[] args) {
-        new Menu();
+        System.out.println("Bienvenido a MonopolyETSE.");
+
+        Menu menu = new Menu(); // Aquí podrías inicializar el juego
+        //menu.iniciarPartida(); // Método que maneja el bucle principal
+        menu.tablero.toString();
     }
 
     /*private void lecturaFichero(String fichero) {
@@ -17,4 +21,3 @@ public class MonopolyETSE {
     }*/
     
 }
-
