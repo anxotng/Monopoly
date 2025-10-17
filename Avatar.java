@@ -33,6 +33,33 @@ public class Avatar {
         return id;
     }
 
+    public String getTipo() {
+        return tipo;
+    }
+
+    public Jugador getJugador() {
+        return jugador;
+    }
+
+    public Casilla getLugar() {
+        return lugar;
+    }
+
+    public void setLugar(Casilla lugar) {
+        this.lugar = lugar;
+    }
+
+    public void setJugador(Jugador jugador) {
+        this.jugador = jugador;
+    }
+
+    public void setId(char id) {
+        this.id = id;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
 
     //A continuación, tenemos otros métodos útiles para el desarrollo del juego.
     /*Método que permite mover a un avatar a una casilla concreta. Parámetros:
@@ -41,6 +68,27 @@ public class Avatar {
     * EN ESTA VERSIÓN SUPONEMOS QUE valorTirada siemrpe es positivo.
      */
     public void moverAvatar(ArrayList<ArrayList<Casilla>> casillas, int valorTirada) {
+        int posActual = lugar.getPosicion(); //Posición actual del avatar
+        lugar.eliminarAvatar(this); //Eliminamos el avatar de la casilla en la que estaba.
+        int nuevaPos = (posActual + valorTirada) % 40 + 1; //Calculamos la nueva posición del avatar.
+
+
+        // Determinar el nuevo lugar según la nueva posición
+        if (nuevaPos <= 11) { // Sur (1-11)
+            lugar = casillas.get(0).get(nuevaPos - 1);
+        } 
+        else if (nuevaPos >= 12 && nuevaPos <= 20) { // Oeste (12-20)
+            lugar = casillas.get(1).get(nuevaPos - 12);
+        } 
+        else if (nuevaPos >= 21 && nuevaPos <= 31) { // Norte (21-31)
+            lugar = casillas.get(2).get(nuevaPos - 21);
+        } 
+        else { // Este (32-40)
+            lugar = casillas.get(3).get(nuevaPos - 32);
+        }
+
+        lugar.anhadirAvatar(this);
+
     }
 
     /*Método que permite generar un ID para un avatar. Sólo lo usamos en esta clase (por ello es privado).
