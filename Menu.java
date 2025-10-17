@@ -10,7 +10,7 @@ public class Menu {
     private ArrayList<Avatar> avatares; //Avatares en la partida.
     private int turno = 0; //Índice correspondiente a la posición en el arrayList del jugador (y el avatar) que tienen el turno
     private int lanzamientos; //Variable para contar el número de lanzamientos de un jugador en un turno.
-    private Tablero tablero; //Tablero en el que se juega.
+    public Tablero tablero; //Tablero en el que se juega.
     private Dado dado1; //Dos dados para lanzar y avanzar casillas.
     private Dado dado2;
     private Jugador banca; //El jugador banca.
@@ -77,3 +77,4 @@ public class Menu {
     }
 
 }
+
