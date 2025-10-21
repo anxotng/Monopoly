@@ -70,7 +70,7 @@ public class Avatar {
     public void moverAvatar(ArrayList<ArrayList<Casilla>> casillas, int valorTirada) {
         int posActual = lugar.getPosicion(); //Posición actual del avatar
         lugar.eliminarAvatar(this); //Eliminamos el avatar de la casilla en la que estaba.
-        int nuevaPos = (posActual + valorTirada) % 40 + 1; //Calculamos la nueva posición del avatar.
+        int nuevaPos = (posActual + valorTirada) % 40; //Calculamos la nueva posición del avatar.
 
 
         // Determinar el nuevo lugar según la nueva posición

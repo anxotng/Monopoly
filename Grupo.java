@@ -11,6 +11,8 @@ class Grupo {
     private String colorGrupo; //Color del grupo
     private int numCasillas; //Número de casillas del grupo.
 
+    private boolean esDuenho; // Variable auxiliar para el método esDuenhoGrupo.
+
     //Constructor vacío.
     public Grupo() {
     }
@@ -43,17 +45,43 @@ class Grupo {
         return colorGrupo;
     }
 
+    public int getNumCasillas() {
+        return numCasillas;
+    }
+
+    public ArrayList<Casilla> getMiembros() {
+        return miembros;
+    }
+
+    public void setColorGrupo(String colorGrupo) {
+        this.colorGrupo = colorGrupo;
+    }
+
+    public void setNumCasillas(int numCasillas) {
+        this.numCasillas = numCasillas;
+    }
+
+
+    
     /* Método que añade una casilla al array de casillas miembro de un grupo.
     * Parámetro: casilla que se quiere añadir.
      */
     public void anhadirCasilla(Casilla miembro) {
+        this.miembros.add(miembro);
+        this.numCasillas++;
     }
 
     /*Método que comprueba si el jugador pasado tiene en su haber todas las casillas del grupo:
     * Parámetro: jugador que se quiere evaluar.
     * Valor devuelto: true si es dueño de todas las casillas del grupo, false en otro caso.
      */
-    /*public boolean esDuenhoGrupo(Jugador jugador) {
-    }*/
-
+    public boolean esDuenhoGrupo(Jugador jugador) {
+        for (Casilla casilla : miembros) {
+            if (casilla.getDuenho() != jugador) {
+                return false;
+            }
+            esDuenho = true;
+        }
+        return esDuenho;
+    }
 }

@@ -20,6 +20,7 @@ public class Jugador {
 
     //Constructor vacío. Se usará para crear la banca.
     public Jugador() {
+        this.propiedades = new ArrayList<Casilla>();
     }
 
     /*Constructor principal. Requiere parámetros:
@@ -29,7 +30,10 @@ public class Jugador {
      */
     public Jugador(String nombre, String tipoAvatar, Casilla inicio, ArrayList<Avatar> avCreados) {
         this.nombre = nombre;
+        this.propiedades = new ArrayList<Casilla>();
         this.avatar = new Avatar(tipoAvatar, this, inicio, avCreados);
+        this.avatar.getLugar().anhadirAvatar(avatar);
+        this.fortuna = 15000000;
     }
 
     //Getters y setters:
@@ -66,6 +70,10 @@ public class Jugador {
         return propiedades;
     }
 
+    public Tablero getTablero(){
+        return tablero;
+    }
+
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
@@ -98,6 +106,10 @@ public class Jugador {
         this.propiedades = propiedades;
     }
 
+    public void setTablero(Tablero tablero){
+        this.tablero = tablero;
+    }
+
     //Otros métodos:
     //Método para añadir una propiedad al jugador. Como parámetro, la casilla a añadir.
     public void anhadirPropiedad(Casilla casilla) {
@@ -127,10 +139,41 @@ public class Jugador {
     public void encarcelar(ArrayList<ArrayList<Casilla>> pos) {
         this.enCarcel = true; //Marcamos al jugador como encarcelado
         this.tiradasCarcel = 0; //Reiniciamos el contador de tiradas en la carcel.
-        // Hazme una variable que calcule cuantas tiradas hay desde doonde estoy a la carcel con porcentaje y todo para que salga bien (contando con que van de 0 a 39)
+
         int posActual = this.avatar.getLugar().getPosicion();
         int carcel = tablero.encontrar_casilla("Carcel").getPosicion();
-        int tiradasACarcel = (posActual - carcel + 40) % 40; //Calculamos las tiradas necesarias para llegar a la carcel desde la posición actual.
+
+        int tiradasACarcel = 0; // Las tiradas que quedan desde la posición actual hasta llegar a la cárcel
+
+        if(carcel < posActual){
+            tiradasACarcel = (carcel - posActual + 40); //Calculamos las tiradas necesarias para llegar a la carcel desde la posición actual.
+        }
+        else{
+            tiradasACarcel = (carcel - posActual); //Calculamos las tiradas necesarias para llegar a la carcel desde la posición actual.
+        }
         this.avatar.moverAvatar(pos, tiradasACarcel); //Movemos el avatar a la casilla de la carcel.
+        
     }
+
+    public String listaPropiedades() {
+        StringBuilder sb = new StringBuilder();
+
+        if(propiedades.isEmpty()) {
+            sb.append("-");
+            return sb.toString();
+        }
+
+        sb.append("[ ");
+        for (Casilla c : this.propiedades) {
+            sb.append(c.getNombre() + " ");
+        }
+        sb.append("]");
+        return sb.toString();
+    }
+
+    @Override
+    public String toString() {
+        return "{\n\tnombre: " + nombre + ", \n\tavatar: " + avatar.getId() + ", \n\tfortuna: " + fortuna + ", \n\tpropiedades: " + listaPropiedades() + "\n}";
+    }
+    
 }

@@ -31,7 +31,9 @@ public class Casilla {
         this.valor = valor;
         this.duenho = duenho;
         this.tablero = tablero;
+        this.grupo = null; // Se asignará después al crear los grupos.
         this.avatares = new ArrayList<Avatar>();
+        this.jugadores = new ArrayList<Jugador>();
     }
 
     /*Constructor utilizado para inicializar las casillas de tipo IMPUESTOS.
@@ -43,18 +45,23 @@ public class Casilla {
         this.posicion = posicion;
         this.impuesto = impuesto;
         this.duenho = duenho;
+        this.grupo = null;
         this.avatares = new ArrayList<Avatar>();
+        this.jugadores = new ArrayList<Jugador>();
     }
 
     /*Constructor utilizado para crear las otras casillas (Suerte, Caja de comunidad y Especiales):
     * Parámetros: nombre, tipo de la casilla (será uno de los que queda), posición en el tablero y dueño.
      */
-    public Casilla(String nombre, String tipo, int posicion, Jugador duenho) {
+    public Casilla(String nombre, String tipo, int posicion, Jugador duenho, Tablero tablero) {
         this.nombre = nombre;
         this.tipo = tipo;
         this.posicion = posicion;
         this.duenho = duenho;
+        this.tablero = tablero;
+        this.grupo = null;
         this.avatares = new ArrayList<Avatar>();
+        this.jugadores = new ArrayList<Jugador>();
     }
 
     //Getters y Setters:
@@ -162,19 +169,33 @@ public class Casilla {
     * - Banca del monopoly (es el dueño de las casillas no compradas aún).*/
     public void comprarCasilla(Jugador solicitante, Jugador banca) {
         if(tipo.equals("Solar") | tipo.equals("Transporte") | tipo.equals("Servicio")){
-            if(duenho == banca && solicitante.getFortuna() >= valor){
-                duenho = solicitante;
-                
-                solicitante.sumarFortuna(-valor);
-                banca.sumarFortuna(valor);
+            if(solicitante.getAvatar().getLugar().getNombre().equalsIgnoreCase(this.getNombre())){
+                if(duenho == banca && solicitante.getFortuna() >= valor){
+                    duenho = solicitante;
+                    
+                    solicitante.sumarFortuna(-valor);
+                    banca.sumarFortuna(valor);
 
-                solicitante.anhadirPropiedad(this);
-                banca.eliminarPropiedad(this);
+                    solicitante.anhadirPropiedad(this);
+                    banca.eliminarPropiedad(this);
 
-                System.out.println("El jugador " + solicitante.getNombre() + " compra la casilla " + nombre + " por " + valor + "€. Su fortuna actual es " + solicitante.getFortuna() + "€.");
+                    System.out.println("El jugador " + solicitante.getNombre() + " compra la casilla " + nombre + " por " + valor + "€. Su fortuna actual es " + solicitante.getFortuna() + "€.");
+
+                } else if (solicitante.getFortuna() < valor){
+                    System.out.println("El jugador " + solicitante.getNombre() + " no tiene suficiente fortuna para comprar la casilla " + nombre + ".");
+                } else if(duenho != solicitante && duenho != banca){
+                    System.out.println("La casilla " + this.getNombre() + " pertenece al jugador " + duenho.getNombre() + " por lo que no puedes comprarla.");
+                }
+            } else{
+                System.out.println("El jugador " + solicitante.getNombre() + " no está en la casilla " + nombre + " por lo que no opta a comprarla.");
             }
+
+        } else {
+            System.out.println("La casilla " + nombre + " no está en venta.");
         }
     }
+
+    
 
     /*Método para añadir valor a una casilla. Utilidad:
     * - Sumar valor a la casilla de parking.
@@ -190,19 +211,19 @@ public class Casilla {
         String info = "";
         switch(tipo.toLowerCase()) {
             case "solar" -> {
-                info = "{\n   tipo: " + tipo + ",\n   grupo: " + grupo.getColorGrupo() + ",\n   propietario: " + duenho + ",\n   valor: " + valor + "\n}";
+                info = "{\n\ttipo: " + tipo + ",\n\tgrupo: " + grupo.getColorGrupo() + ",\n\tpropietario: " + duenho + ",\n\tvalor: " + valor + ", \n\talquiler: " + impuesto + "\n}";
             }
 
             case "servicio" -> {
-                info = "{\n  tipo: " + tipo + ",\n  propietario: " + duenho + ",\n  valor: " + valor + "\n}";
+                info = "{\n\ttipo: " + tipo + ",\n\tpropietario: " + duenho + ",\n\tvalor: " + valor + "\n}";
             }
             
             case "transporte" -> {
-                info = "{\n  tipo: " + tipo + ",\n  propietario: " + duenho + ",\n  valor: " + valor + "\n}";
+                info = "{\n\ttipo: " + tipo + ",\n\tpropietario: " + duenho + ",\n\tvalor: " + valor + "\n}";
             }
             
             case "impuesto" -> {
-                info = "{\n  tipo: " + tipo + ",\n  apagar: " + impuesto + "\n}";
+                info = "{\n\ttipo: " + tipo + ",\n\tapagar: " + impuesto + "\n}";
             }
             
             case "especial" -> {
@@ -239,7 +260,7 @@ public class Casilla {
                                 }
                             }    
                         }
-                        info = "{\n  salir: " + this + ",\n  jugadores: " + listaCarcel + "\n}";
+                        info = "{\n  salir: 500000,\n  jugadores: " + listaCarcel + "\n}";
                     }
                 }
             }
@@ -252,10 +273,93 @@ public class Casilla {
         return info;
     }
 
+    //Pagador: jugador a pagar el alquiler
+    //Cobrador: jugador a cobrar el alquiler (dueño de la casilla)
+    public void alquiler(Jugador cobrador, Jugador pagador, int valorDados){
+        // Si es transporte -> alquiler de 250000€
+        // Si es servicio -> valor de los dados * 4 * 50000€
+        // Si es solar -> varía dependiendo del grupo y casilla.
+        if(tipo.equals("Transporte")){
+            setImpuesto(250000);
+            pagador.sumarFortuna(-getImpuesto());
+            cobrador.sumarFortuna(getImpuesto());
+        } else if(tipo.equals("Servicio")){
+            setImpuesto(valorDados * 4 * 50000);
+            pagador.sumarFortuna(-getImpuesto());
+            cobrador.sumarFortuna(getImpuesto());
+        } else if(tipo.equals("Solar")){
+            // Cada solar tiene un valor de alquiler distinto
+            if(nombre.equalsIgnoreCase("Solar1")){
+                setImpuesto(20000);
+            } else if(nombre.equalsIgnoreCase("Solar2")){
+                setImpuesto(40000);
+            } else if(nombre.equalsIgnoreCase("Solar3")){
+                setImpuesto(60000);
+            } else if(nombre.equalsIgnoreCase("Solar4")){
+                setImpuesto(60000);
+            } else if(nombre.equalsIgnoreCase("Solar5")){
+                setImpuesto(80000);
+            } else if(nombre.equalsIgnoreCase("Solar6")){
+                setImpuesto(100000);
+            } else if(nombre.equalsIgnoreCase("Solar7")){
+                setImpuesto(100000);
+            } else if(nombre.equalsIgnoreCase("Solar8")){
+                setImpuesto(120000);
+            } else if(nombre.equalsIgnoreCase("Solar9")){
+                setImpuesto(140000);
+            } else if(nombre.equalsIgnoreCase("Solar10")){
+                setImpuesto(140000);
+            } else if(nombre.equalsIgnoreCase("Solar11")){
+                setImpuesto(160000);
+            } else if(nombre.equalsIgnoreCase("Solar12")){
+                setImpuesto(180000);
+            } else if(nombre.equalsIgnoreCase("Solar13")){
+                setImpuesto(180000);
+            } else if(nombre.equalsIgnoreCase("Solar14")){
+                setImpuesto(200000);
+            } else if(nombre.equalsIgnoreCase("Solar15")){
+                setImpuesto(220000);
+            } else if(nombre.equalsIgnoreCase("Solar16")){
+                setImpuesto(220000);
+            } else if(nombre.equalsIgnoreCase("Solar17")){
+                setImpuesto(240000);
+            } else if(nombre.equalsIgnoreCase("Solar18")){
+                setImpuesto(260000);
+            } else if(nombre.equalsIgnoreCase("Solar19")){
+                setImpuesto(260000);
+            } else if(nombre.equalsIgnoreCase("Solar20")){
+                setImpuesto(280000);
+            } else if(nombre.equalsIgnoreCase("Solar21")){
+                setImpuesto(350000);
+            } else if(nombre.equalsIgnoreCase("Solar22")){
+                setImpuesto(500000);
+            }
+            pagador.sumarFortuna(-getImpuesto());
+            cobrador.sumarFortuna(getImpuesto());
+        }
+    }
+
     /* Método para mostrar información de una casilla en venta.
      * Valor devuelto: texto con esa información.
      */
     /*public String casEnVenta() {
     }*/
 
+    @Override
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+            
+        if(!avatares.isEmpty()){
+            for (Avatar avatar: avatares) {
+                sb.append("&").append(avatar.getId());
+            }
+        }
+        String representacionCasilla;
+        representacionCasilla = String.format("%-7s%5s", nombre, sb.toString());
+        
+        return representacionCasilla;
+    }
+
 }
+
+
