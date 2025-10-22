@@ -189,20 +189,23 @@ public class Menu {
                     return;
                 }
 
-                // aquí me va a pedir describir cosas concretas como: describir Maria, describir Parking
-                for(Jugador j : jugadores) {
-                    if(partes[1].equals(j.getNombre())) {
-                        descJugador(partes);
-                        return;
+                if(partes.length == 3 && partes[1].equalsIgnoreCase("jugador")){
+                    for(Jugador j : jugadores) {
+                        if(partes[2].equalsIgnoreCase(j.getNombre())) {
+                            descJugador(partes);
+                            return;
+                        }
+                    }
+                } else if(partes.length == 2){
+                    for(Casilla c : tablero.getCasillas()) {
+                        if(partes[1].equalsIgnoreCase(c.getNombre())) {
+                            descCasilla(partes[1]);
+                            return;
+                        }
                     }
                 }
-
-                for(Casilla c : tablero.getCasillas()) {
-                    if(partes[1].equals(c.getNombre())) {
-                        descCasilla(partes[1]);
-                        return;
-                    }
-                }
+                
+                break;
 
             case "listar":
             case "Listar":
@@ -278,7 +281,7 @@ public class Menu {
      */
     private void descJugador(String[] partes) {
         for(Jugador j : jugadores) { // 
-            if(partes[1].equals(j.getNombre())) { //Comprueba con qué nombre coincide el jugador del archivo.
+            if(partes[2].equalsIgnoreCase(j.getNombre())) { //Comprueba con qué nombre coincide el jugador del archivo.
                 System.out.println(j.toString());
                 return;
             }
@@ -296,7 +299,7 @@ public class Menu {
     */
     private void descCasilla(String nombre) {
         for(Casilla c : tablero.getCasillas()) {
-            if(nombre.equals(c.getNombre())) {
+            if(nombre.equalsIgnoreCase(c.getNombre())) {
                 System.out.println(c.infoCasilla());
                 return;
             }
@@ -309,6 +312,35 @@ public class Menu {
         if (tirado == true) {
             System.out.println(jugadores.get(turno).getNombre() +", ya has lanzado los dados. Finaliza tu turno.");
             acabarTurno();
+            return;
+        }
+
+        if(jugadores.get(turno).estaEnCarcel()){
+            Dado dadoCarcel1 = new Dado();
+            Dado dadoCarcel2 = new Dado();
+
+            dadoCarcel1.setValorDado(dadoCarcel1.hacerTirada());
+            dadoCarcel2.setValorDado(dadoCarcel2.hacerTirada());
+
+            int valorDadoCarcel1 = dadoCarcel1.getValorDado();
+            int valorDadoCarcel2 = dadoCarcel2.getValorDado();
+
+            if(valorDadoCarcel1 == valorDadoCarcel2){
+                // El jugador sale de la cárcel pero no se mueve
+                jugadores.get(turno).setEnCarcel(false);
+                jugadores.get(turno).setTiradasCarcel(0);
+            }
+
+            if(jugadores.get(turno).getTiradasCarcel() >= 3 && jugadores.get(turno).estaEnCarcel() == true){
+                // Paga obligatoriamente los 500000 y sale de la cárcel
+                jugadores.get(turno).sumarFortuna(-500000);
+                System.out.println(jugadores.get(turno).getNombre() + " paga 500.000€ y sale de la cárcel. Puede lanzar los dados.");
+                jugadores.get(turno).setEnCarcel(false);
+                jugadores.get(turno).setTiradasCarcel(0);
+            }
+
+            jugadores.get(turno).setTiradasCarcel(jugadores.get(turno).getTiradasCarcel()+1);
+
             return;
         }
 
@@ -334,6 +366,7 @@ public class Menu {
 
             if(dadosDobles == true && jugadores.get(turno).estaEnCarcel() == true){
                 // Sale de la cárcel y se acaba el turno
+                jugadores.get(turno).setEnCarcel(false);
             }
 
             if(vecesDoblesSacados >= 3){
@@ -352,8 +385,12 @@ public class Menu {
                 case "solar": 
                     // Si la posicionDespues tiene duenho, pagamos el alquiler
                     if((posicionDespues.getDuenho() != null) && (posicionDespues.getDuenho() != jugadores.get(turno)) && (posicionDespues.getDuenho() != banca)) {
-                        posicionDespues.alquiler(posicionDespues.getDuenho(), jugadores.get(turno), valorTotal);
-                        System.out.println("El avatar " + jugadores.get(turno).getAvatar().getId() + " avanza " + valorTotal + " posiciones, desde " + posicionAntes.getNombre() + " hasta " + posicionDespues.getNombre() + ". Se han pagado "+ posicionDespues.getImpuesto() + "€ de alquiler.");
+                        if(jugadores.get(turno).getFortuna() >= posicionDespues.getImpuesto()){ // si la fortuna del jugador es mayor o igual que el alquiler de la casilla en la que se cae
+                            posicionDespues.alquiler(posicionDespues.getDuenho(), jugadores.get(turno), valorTotal);
+                            System.out.println("El avatar " + jugadores.get(turno).getAvatar().getId() + " avanza " + valorTotal + " posiciones, desde " + posicionAntes.getNombre() + " hasta " + posicionDespues.getNombre() + ". Se han pagado "+ posicionDespues.getImpuesto() + "€ de alquiler.");
+                        } else{
+                            System.out.println("El jugador " + jugadores.get(turno).getNombre() + " no tiene suficiente dinero para pagar el alquiler de la casilla " + posicionDespues.getNombre() + ", así que puede(1) hipotecar alguna propiedad o (2) declararse en bancarrota");
+                        }
                     } else{
                         System.out.println("El avatar " + jugadores.get(turno).getAvatar().getId() + " avanza " + valorTotal + " posiciones, desde " + posicionAntes.getNombre() + " hasta " + posicionDespues.getNombre());
                     }
@@ -406,18 +443,19 @@ public class Menu {
                     tablero.sumarboteParking(posicionDespues.getImpuesto());
                     System.out.println("El avatar " + jugadores.get(turno).getAvatar().getId() + " avanza " + valorTotal + " posiciones, desde " + posicionAntes.getNombre() + " hasta impuesto " + posicionDespues.getNombre() + ". El jugador paga "+ posicionDespues.getImpuesto() + "€ que se depositan en el Parking.");
                     break;
+
+                case "comunidad":
+                    System.out.println("El avatar " + jugadores.get(turno).getAvatar().getId() + " avanza " + valorTotal + " posiciones, desde " + posicionAntes.getNombre() + " hasta Caja de comunidad.");
+                    break;
+    
+                case "suerte":
+                    System.out.println("El avatar " + jugadores.get(turno).getAvatar().getId() + " avanza " + valorTotal + " posiciones, desde " + posicionAntes.getNombre() + " hasta Suerte.");
+                    break;
             }
 
             lanzamientos++;
 
-        }while(dadosDobles == true);
-
-        if(lanzamientos >= 3 && jugadores.get(turno).estaEnCarcel() == true){
-            // Paga obligatoriamente los 500000 y sale de la cárcel
-            jugadores.get(turno).sumarFortuna(-500000);
-            System.out.println(jugadores.get(turno).getNombre() + " paga 500.000€ y sale de la cárcel. Puede lanzar los dados.");
-        }
-        
+        }while(dadosDobles == true);        
     }
 
     /*Método que ejecuta todas las acciones realizadas con el comando 'comprar nombre_casilla'.
@@ -436,7 +474,7 @@ public class Menu {
     private void salirCarcel(){
         if(jugadores.get(turno).getAvatar().getLugar().getNombre().equalsIgnoreCase("carcel")){
             if(jugadores.get(turno).estaEnCarcel() == false){
-                System.out.println("Simplemente estás de visita en la cárcel, pero no encarcelado. Puedes seguir jugando normal.");
+                System.out.println("El jugador " + jugadores.get(turno).getNombre() + " simplemente está de visita en la cárcel, pero no encarcelado. Puede seguir jugando normal.");
             } else{ 
                 // opciones para salir de la cárcel: (1) pagar 500000€ // (2) usar una carta de suerte (esta entrega no) // (3) sacar dobles valores en los dados
                 Scanner sc = new Scanner(System.in);
@@ -449,14 +487,8 @@ public class Menu {
                 } else if(opcion == 2){
                     System.out.println("Opción no disopnible actualmente");
                 } else if(opcion == 3){
-                    /*lanzarDados();
-                    int valorDado1 = dado1.getValorDado();
-                    int valorDado2 = dado2.getValorDado();
-
-                    if(valorDado1 == valorDado2){
-                        System.out.println("El jugador " + jugadores.get(turno).getNombre() + " sale de la cárcel.");
-                    }*/
-                    acabarTurno();
+                    tirado = false; 
+                    lanzarDados();
                 }
 
                 jugadores.get(turno).setTiradasCarcel(0);
@@ -494,11 +526,48 @@ public class Menu {
     // Método que realiza las acciones asociadas al comando 'acabar turno'.
     private void acabarTurno() {
         setTurno((getTurno() + 1) % jugadores.size());
+        System.out.println("El jugador actual es " + jugadores.get(turno).getNombre() + ".");
     }
 
 
 
     private void lanzarDadosForzados(String partes[]) {
+
+        if(tirado == true){
+            System.out.println(jugadores.get(turno).getNombre() +", ya has lanzado los dados. Finaliza tu turno.");
+            acabarTurno();
+            return;
+        }
+
+        if(jugadores.get(turno).estaEnCarcel()){
+            Dado dadoCarcel1 = new Dado();
+            Dado dadoCarcel2 = new Dado();
+
+            dadoCarcel1.setValorDado(dadoCarcel1.hacerTirada());
+            dadoCarcel2.setValorDado(dadoCarcel2.hacerTirada());
+
+            int valorDadoCarcel1 = dadoCarcel1.getValorDado();
+            int valorDadoCarcel2 = dadoCarcel2.getValorDado();
+
+            if(valorDadoCarcel1 == valorDadoCarcel2){
+                // El jugador sale de la cárcel pero no se mueve
+                jugadores.get(turno).setEnCarcel(false);
+                jugadores.get(turno).setTiradasCarcel(0);
+            }
+
+            if(jugadores.get(turno).getTiradasCarcel() >= 3 && jugadores.get(turno).estaEnCarcel() == true){
+                // Paga obligatoriamente los 500000 y sale de la cárcel
+                jugadores.get(turno).sumarFortuna(-500000);
+                System.out.println(jugadores.get(turno).getNombre() + " paga 500.000€ y sale de la cárcel. Puede lanzar los dados.");
+                jugadores.get(turno).setEnCarcel(false);
+                jugadores.get(turno).setTiradasCarcel(0);
+            }
+
+            jugadores.get(turno).setTiradasCarcel(jugadores.get(turno).getTiradasCarcel()+1);
+
+            return;
+        }
+
         // en el partes[2] esta el valorforzado en el formato "x+y"
         String[] valores = partes[2].split("\\+"); // el split se usa para separar expresiones regulares, y en este caso, '+' no es tratado como un caracter literal, por eso se utiliza la \\ 
         int valorDado1 = Integer.parseInt(valores[0]); //Convertir a entero.
@@ -510,10 +579,6 @@ public class Menu {
             dadosDobles = true;
             vecesDoblesSacados++;
         }
-
-        /*if(dadosDobles == true && jugadores.get(turno).estaEnCarcel() == true){
-            // Sale de la cárcel y se acaba el turno
-        }*/
 
         Casilla posicionAntes = jugadores.get(turno).getAvatar().getLugar();
 
@@ -537,7 +602,7 @@ public class Menu {
                 switch(posicionDespues.getNombre().toLowerCase()){
                     case "carcel":
                         if(jugadores.get(turno).estaEnCarcel() == false){
-                            System.out.println("Simplemente estás de visita en la cárcel, pero no encarcelado. Puedes seguir jugadno normal.");
+                            System.out.println("Simplemente estás de visita en la cárcel, pero no encarcelado. Puedes seguir jugando normal.");
                             break;
                         }
                     
@@ -594,11 +659,7 @@ public class Menu {
         }
 
         lanzamientos++;
-        if(lanzamientos >= 3 && jugadores.get(turno).estaEnCarcel() == true){
-            // Paga obligatoriamente los 500000 y sale de la cárcel
-            jugadores.get(turno).sumarFortuna(-500000);
-            System.out.println(jugadores.get(turno).getNombre() + " paga 500.000€ y sale de la cárcel. Puede lanzar los dados.");
-        }
+        
     }
 
 }

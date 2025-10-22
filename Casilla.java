@@ -211,7 +211,7 @@ public class Casilla {
         String info = "";
         switch(tipo.toLowerCase()) {
             case "solar" -> {
-                info = "{\n\ttipo: " + tipo + ",\n\tgrupo: " + grupo.getColorGrupo() + ",\n\tpropietario: " + duenho + ",\n\tvalor: " + valor + ", \n\talquiler: " + impuesto + "\n}";
+                info = "{\n\ttipo: " + tipo + ", \n\tgrupo: " + grupo.getColorGrupo() + ", \n\tpropietario: " + duenho.getNombre() + ",\n\tvalor: " + valor + ", \n\talquiler: " + impuesto + "\n}";
             }
 
             case "servicio" -> {
@@ -281,12 +281,10 @@ public class Casilla {
         // Si es solar -> varía dependiendo del grupo y casilla.
         if(tipo.equals("Transporte")){
             setImpuesto(250000);
-            pagador.sumarFortuna(-getImpuesto());
-            cobrador.sumarFortuna(getImpuesto());
+
         } else if(tipo.equals("Servicio")){
             setImpuesto(valorDados * 4 * 50000);
-            pagador.sumarFortuna(-getImpuesto());
-            cobrador.sumarFortuna(getImpuesto());
+
         } else if(tipo.equals("Solar")){
             // Cada solar tiene un valor de alquiler distinto
             if(nombre.equalsIgnoreCase("Solar1")){
@@ -334,9 +332,10 @@ public class Casilla {
             } else if(nombre.equalsIgnoreCase("Solar22")){
                 setImpuesto(500000);
             }
-            pagador.sumarFortuna(-getImpuesto());
-            cobrador.sumarFortuna(getImpuesto());
+
         }
+        pagador.sumarFortuna(-getImpuesto());
+        cobrador.sumarFortuna(getImpuesto());
     }
 
     /* Método para mostrar información de una casilla en venta.
